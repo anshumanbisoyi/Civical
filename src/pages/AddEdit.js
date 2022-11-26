@@ -3,8 +3,9 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from "../firebase";
-import { useNavigate } from "react-router-dom";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
+import { addDoc, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const intialState = {
   title: "",
@@ -23,10 +24,13 @@ const cityOptions = [
   "Kolkata",
 ];
 
-const AddEdit = ({ user }) => {
+const AddEdit = ({ user,setActive }) => {
   const [form, setForm] = useState(intialState);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
+
+  const {id} =useParams();
+
   const navigate = useNavigate();
   const { title, tags, location, trending, description } = form;
 
@@ -56,6 +60,7 @@ const AddEdit = ({ user }) => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            toast.info("Image uploaded successfully");
             setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
           });
         }
@@ -64,31 +69,61 @@ const AddEdit = ({ user }) => {
     file && uploadFile();
   }, [file]);
 
+  useEffect(()=>{
+    id && getIssueDetail();
+  },[id]);
+  const getIssueDetail = async() => {
+    const docRef =doc(db,"issues",id);
+    const snapshot = await getDoc(docRef);
+    if(snapshot.exists()){
+      setForm({...snapshot.data()});
+    }
+    setActive(null);
+  }
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const handleTags = (e) => {
     setForm({ ...form, tags });
   };
-  const handleUpvote = (e) => {};
   const onLocationChange = (e) => {
     setForm({ ...form, location: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (location && tags && file && description) {
+    if (location && tags && title && description) {
+
       //add trending later
-      try {
-        await addDoc(collection(db, "issues"), {
-          ...form,
-          timestamp: serverTimestamp(),
-          author: user.displayName,
-          userId: user.uid,
-        });
-      } catch (err) {
-        console.log(err);
+      if(!id){
+ try {
+   await addDoc(collection(db, "issues"), {
+     ...form,
+     timestamp: serverTimestamp(),
+     author: user.displayName,
+     userId: user.uid,
+   });
+   toast.success("Issue create on civical.")
+ } catch (err) {
+   console.log(err);
+ }
+      }else{
+         try {
+           await updateDoc(doc(db, "issues", id), {
+             ...form,
+             timestamp: serverTimestamp(),
+             author: user.displayName,
+             userId: user.uid,
+           });
+           toast.success("Issue updated on civical.");
+         } catch (err) {
+           console.log(err);
+         }
       }
+     
+    } else{
+      return toast.error("All fields are mandartory to fill.");
     }
     navigate("/");
   };
@@ -97,7 +132,9 @@ const AddEdit = ({ user }) => {
     <div className="container-fluid mb-4">
       <div className="container">
         <div className="col-12 ">
-          <div className="text-center heading py-2">Raise Issue</div>
+          <div className="text-center heading py-2">
+            {id ? "Update Issue" : "Create Issue"}
+          </div>
           <div className="row h-100 justify-content-center align-items-center">
             <div className="col-10 col-md-8 col-lg-6">
               <form className="row blog-form" onSubmit={handleSubmit}>
@@ -184,7 +221,7 @@ const AddEdit = ({ user }) => {
                         type="submit"
                         disabled={progress !== null && progress < 100}
                       >
-                        Submit
+                        {id ? "Update" : "Submit"}
                       </button>
                     </div>
                   </div>

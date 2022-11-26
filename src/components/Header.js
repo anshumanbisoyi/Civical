@@ -1,9 +1,8 @@
 import React from 'react'
 import {Link} from "react-router-dom";
+import "bootstrap/js/dist/modal";
 const Header = ({setActive,active,user, handleLogout}) => {
     const userId =user?.uid;
-    // console.log("userId",userId);
-    // console.log("name",user?.displayName);
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid bg-faded padding-media">
@@ -21,12 +20,12 @@ const Header = ({setActive,active,user, handleLogout}) => {
             >
               <span className="fa fa-bars"></span>
             </button>
-            <div className="collapse navbar-collapse">
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
               <h1>Civical.</h1>
-              <ul
-                className="lfti navbar-nav me-auto mb-2 mb-lg-0"
-                id="navbarSupportedContent"
-              >
+              <ul className="lfti navbar-nav me-auto mb-2 mb-lg-0">
                 <Link to="/" style={{ textDecoration: "none" }}>
                   <li
                     className={`nav-item nav-link ${
@@ -74,11 +73,13 @@ const Header = ({setActive,active,user, handleLogout}) => {
                           }}
                         />
                       </div>
-                      <p style={{marginTop:'13px',marginLeft:'10px'}}
-                      >{user?.displayName} 
-                      </p> 
+                      <p style={{ marginTop: "13px", marginLeft: "10px" }}>
+                        {user?.displayName}
+                      </p>
                       {/* change needed */}
-                      <li className='nav-item nav-link' onClick={handleLogout}>Logout</li>
+                      <li className="nav-item nav-link" onClick={handleLogout}>
+                        Logout
+                      </li>
                     </>
                   ) : (
                     <Link to="/auth" style={{ textDecoration: "none" }}>

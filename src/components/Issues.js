@@ -35,11 +35,14 @@ const Issues = ({issues,user,handleDelete}) => {
             </Link>
             {user?.uid && item.userId === user.uid && (
               <div style={{ float: "right" }}>
-                <FontAwesome
-                  name="edit"
-                  style={{ margin: "15px", cursor: "pointer" }}
-                  size="2x"
-                />
+                <Link to={`/update/${item.id}`}>
+                  <FontAwesome
+                    name="edit"
+                    style={{ margin: "15px", cursor: "pointer" }}
+                    size="2x"
+                  />
+                </Link>
+
                 <FontAwesome
                   name="trash"
                   style={{ cursor: "pointer" }}
