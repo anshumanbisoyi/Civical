@@ -1,6 +1,9 @@
 import React from 'react'
 import {Link} from "react-router-dom";
-const Header = ({setActive,active}) => {
+const Header = ({setActive,active,user, handleLogout}) => {
+    const userId =user?.uid;
+    console.log("userId",userId);
+    console.log("name",user?.displayName);
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid bg-faded padding-media">
@@ -57,16 +60,38 @@ const Header = ({setActive,active}) => {
               </ul>
               <div className="row g-3">
                 <ul className=" lfti navbar-nav me-auto mb-2 mb-lg-0">
-                  <Link to="/auth" style={{ textDecoration: "none" }}>
-                    <li
-                      className={`nav-item nav-link ${
-                        active === "login" ? "active" : ""
-                      }`}
-                      onClick={() => setActive("login")}
-                    >
-                      Login
-                    </li>
-                  </Link>
+                  {userId ? (
+                    <>
+                      <div className="profile-logo">
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                          alt="logo"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            marginTop: "12px",
+                          }}
+                        />
+                      </div>
+                      <p style={{marginTop:'13px',marginLeft:'10px'}}
+                      >{user?.displayName} 
+                      </p> 
+                      {/* change needed */}
+                      <li className='nav-item nav-link' onClick={handleLogout}>Logout</li>
+                    </>
+                  ) : (
+                    <Link to="/auth" style={{ textDecoration: "none" }}>
+                      <li
+                        className={`nav-item nav-link ${
+                          active === "login" ? "active" : ""
+                        }`}
+                        onClick={() => setActive("login")}
+                      >
+                        Login
+                      </li>
+                    </Link>
+                  )}
                 </ul>
               </div>
             </div>
