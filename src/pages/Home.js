@@ -1,9 +1,10 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Issues from "../components/Issues";
+import Spinner from "../components/Spinner";
 import { db } from "../firebase";
 
-const Home = () => {
+const Home = ({setActive, user}) => {
   const [loading, setLoading] = useState(true);
   const [issues, setIssues] = useState([]);
 
@@ -16,6 +17,7 @@ const Home = () => {
           list.push({ id: doc.id, ...doc.data() });
         });
         setIssues(list);
+        setLoading(false);
       },
       (error) => {
         console.log(error);
@@ -26,13 +28,28 @@ const Home = () => {
     };
   }, []);
 
+if(loading){
+  return <Spinner/>;
+}
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure wanted to delete that blog ?")) {
+      try {
+        setLoading(true);
+        await deleteDoc(doc(db, "issues", id));
+        // toast.success("Blog deleted successfully");
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 console.log("issues",issues);
 
   return (
     <div className="container-fluid pb-4 pt-4 padding">
       <div className="container padding">
         <div className="col-md-8">
-          <Issues issues={issues}/>
+          <Issues issues={issues} user={user} handleDelete={handleDelete}/>
         </div>
       </div>
     </div>

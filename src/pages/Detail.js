@@ -3,7 +3,7 @@ import React,{useState,useEffect} from 'react';
 import {useParams} from "react-router-dom";
 import { db } from '../firebase';
 
-const Detail = (setActive) => {
+const Detail = ({setActive}) => {
   const {id}=useParams();
   const [issue,setIssue]=useState(null);
 

@@ -3,13 +3,11 @@ import FontAwesome from 'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { excerpt } from '../utility';
 
-
-
-
-const Issues = ({issues,user}) => {
+const Issues = ({issues,user,handleDelete}) => {
+    const userId=user?.uid;
   return (
     <div>
-      <div className="blog-heading text-start py-2 mb-4">People Issues</div>
+      <div className="blog-heading text-start py-2 mb-4">People's Issues</div>
       {issues?.map((item) => (
         <div className="row pb-4" key={item.id}>
           <div className="col-md-5">
@@ -35,19 +33,21 @@ const Issues = ({issues,user}) => {
             <Link to={`/detail/${item.id}`}>
               <button className=" btn btn-read">Read More</button>
             </Link>
-
-            <div style={{ float: "right" }}>
-              <FontAwesome
-                name="edit"
-                style={{ margin: "15px", cursor: "pointer" }}
-                size="2px"
-              />
-              <FontAwesome
-                name="trash"
-                style={{ cursor: "pointer" }}
-                size="2px"
-              />
-            </div>
+            {user?.uid && item.userId === user.uid && (
+              <div style={{ float: "right" }}>
+                <FontAwesome
+                  name="edit"
+                  style={{ margin: "15px", cursor: "pointer" }}
+                  size="2x"
+                />
+                <FontAwesome
+                  name="trash"
+                  style={{ cursor: "pointer" }}
+                  size="2x"
+                  onClick={() => handleDelete(item.id)}
+                />
+              </div>
+            )}
           </div>
         </div>
       ))}
