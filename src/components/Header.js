@@ -2,8 +2,8 @@ import React from 'react'
 import {Link} from "react-router-dom";
 const Header = ({setActive,active,user, handleLogout}) => {
     const userId =user?.uid;
-    console.log("userId",userId);
-    console.log("name",user?.displayName);
+    // console.log("userId",userId);
+    // console.log("name",user?.displayName);
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid bg-faded padding-media">

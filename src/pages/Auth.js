@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword, signInAnonymously, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { auth } from "../firebase";
@@ -11,7 +15,7 @@ const intialState = {
   password: "",
   confirmPassword: "",
 };
-const Auth = ({ setActive }) => {
+const Auth = ({ setActive, setUser }) => {
   const [state, setState] = useState(intialState);
   const [signUp, setSignUp] = useState(false);
 
@@ -23,9 +27,15 @@ const Auth = ({ setActive }) => {
   const handleAuth = async (e) => {
     e.preventDefault();
     if (!signUp) {
-      if(email && password){
-        const {user}=await signInWithEmailAndPassword(auth, email, password);
+      if (email && password) {
+        const { user } = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         setActive("home");
+        setUser(user);
+        navigate("/");
       }
     } else {
       if (password !== confirmPassword) {
