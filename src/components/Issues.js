@@ -1,5 +1,6 @@
 import React from 'react';
 import FontAwesome from 'react-fontawesome';
+import { Link } from 'react-router-dom';
 import { excerpt } from '../utility';
 
 
@@ -24,14 +25,17 @@ const Issues = ({issues,user}) => {
               <h6 className="category catg-color">{item.location}</h6>
               <span className="title py-2">{item.title}</span>
               <span className="meta-info">
-                <p className="author">{item.author}</p> on  
-                &nbsp;{item.timestamp.toDate().toDateString()}
+                <p className="author">{item.author}</p> on &nbsp;
+                {item.timestamp.toDate().toDateString()}
               </span>
             </div>
             <div className="short-description text-start">
               {excerpt(item.description, 120)}
             </div>
-            <button className="btn btn-read">Read More</button>
+            <Link to={`/detail/${item.id}`}>
+              <button className=" btn btn-read">Read More</button>
+            </Link>
+
             <div style={{ float: "right" }}>
               <FontAwesome
                 name="edit"
