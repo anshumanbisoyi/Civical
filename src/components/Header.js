@@ -76,7 +76,6 @@ const Header = ({setActive,active,user, handleLogout}) => {
                       <p style={{ marginTop: "13px", marginLeft: "10px" }}>
                         {user?.displayName}
                       </p>
-                      {/* change needed */}
                       <li className="nav-item nav-link" onClick={handleLogout}>
                         Logout
                       </li>
